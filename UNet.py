@@ -69,6 +69,8 @@ class Unet(nn.Module):
 
         self.out_conv = nn.Conv2d(64, n_class, kernel_size=1)
         self.sigmoid = nn.Sigmoid()
+
+        self.apply(self._init_weights)
     
     def forward(self, x):
         x1 = self.inc(x)
@@ -88,6 +90,14 @@ class Unet(nn.Module):
         out = self.sigmoid(out)
 
         return out
+    
+    def _init_weights(self, module):
+        if isinstance(module, nn.Conv2d):
+            nn.init.kaiming_normal_(module.weight, mode="fan_out", nonlinearity="relu")
+        if isinstance(module, nn.BatchNorm2d):
+            nn.init.constant_(module.weight, 1)
+            nn.init.constant_(module.bias, 0)
+
     
 if __name__ == '__main__':
     random_input = torch.randn(1, 3, 640, 640)
