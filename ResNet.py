@@ -42,7 +42,7 @@ class BasicBlock(nn.Module):
         self.conv1 = conv3x3(in_channels, out_channels, stride, padding)
         self.bn1 = nn.BatchNorm2d(out_channels)
         
-        self.conv2 = conv3x3(out_channels, out_channels, padding)
+        self.conv2 = conv3x3(out_channels, out_channels, stride=1, padding=padding)
         self.bn2 = nn.BatchNorm2d(out_channels)
 
         self.relu = nn.ReLU(inplace=True) # 直接在输入张量上进行修改，将结果存储到输入张量中
@@ -192,27 +192,18 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
     
     def forward(self, x: Tensor) -> Tensor:
-        print(f'Before Conv: {x.size()}') 
         x = self.conv1(x)
-        print(f'After Conv: {x.size()}')
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
-        print(f'After Maxpool: {x.size()}')
 
         x = self.layer1(x)
-        print(f'After Layer1: {x.size()}')
         x = self.layer2(x)
-        print(f'After Layer2: {x.size()}')
         x = self.layer3(x)
-        print(f'After Layer3: {x.size()}')
         x = self.layer4(x)
-        print(f'After Layer4: {x.size()}')
 
         x = self.avg_pool(x)
-        print(f'After Avgpool: {x.size()}')
         x = torch.flatten(x, 1)
-        print(f'After Flatten: {x.size()}')
         x = self.fc(x)
         return x
 
