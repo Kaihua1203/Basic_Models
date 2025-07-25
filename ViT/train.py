@@ -5,11 +5,11 @@ from torchvision import transforms, datasets
 from model import VisionTransformer
 from tqdm import tqdm
 
-transforms = transforms.Compose(
+transforms = transforms.Compose([
     transforms.Resize(28),
     transforms.ToTensor(),
     transforms.Normalize((0.1307,), (0.3081,))
-)
+])
 
 BATCH_SIZE = 8
 

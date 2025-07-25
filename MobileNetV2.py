@@ -101,7 +101,7 @@ class MobileNetV2(nn.Module):
 
         self.classifer = nn.Sequential(
             nn.Dropout(0.2), # optional
-            nn.Linear(last_channels, n_classes)
+            nn.Linear(self.last_channels, n_classes)
         )
         self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
 
@@ -117,13 +117,9 @@ class MobileNetV2(nn.Module):
 
     def forward(self, x):
         assert x.size(1) == 3, "The demiensions have to be 3!"
-        for layer in self.encoder:
-            x = layer(x)
-            print(f"Layer: {layer.__class__.__name__}, Output shape: {x.shape}")
+        x = self.encoder(x)
         x = self.avg_pool(x)
-        print(f"After avg_pool: {x.shape}")
         x = torch.flatten(x, 1)
-        print(f"After flatten: {x.shape}")
         x = self.classifer(x)
         return x
 

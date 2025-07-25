@@ -78,10 +78,8 @@ class Unet(nn.Module):
         x3 = self.down2(x2)
         x4 = self.down3(x3)
         x5 = self.down4(x4)
-        print(f"x5 shape: {x5.shape}")
 
         x = self.up1(x5, x4)
-        print(f"After first upsample: {x.shape}")
         x = self.up2(x, x3)
         x = self.up3(x, x2)
         x = self.up4(x, x1)
